@@ -1,18 +1,144 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import experienceData from "@/data/experience";
 import { useLanguage } from "@/context/LanguageContext";
 import useReveal from "@/hooks/useReveal";
 
+// Documentation Modal with Image Carousel
+function DocumentationModal({ images, title, isOpen, onClose, lang }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (!isOpen || images.length <= 1) return;
+    
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [isOpen, images.length]);
+
+  // Reset index when modal opens
+  useEffect(() => {
+    if (isOpen) setCurrentIndex(0);
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        className="relative w-full max-w-4xl bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+        >
+          <svg className="w-5 h-5 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Title */}
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
+          {lang === "id" ? "Dokumentasi" : "Documentation"} - {title}
+        </h3>
+
+        {/* Image Carousel */}
+        <div className="relative w-full h-80 sm:h-96 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-700">
+          {images.map((img, idx) => (
+            <div
+              key={idx}
+              className={`absolute inset-0 transition-opacity duration-500 ${
+                idx === currentIndex ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <Image
+                src={img}
+                alt={`${title} - ${idx + 1}`}
+                fill
+                className="object-contain"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Dots indicator */}
+        {images.length > 1 && (
+          <div className="flex justify-center gap-2 mt-4">
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentIndex(idx)}
+                className={`w-2.5 h-2.5 rounded-full transition-all ${
+                  idx === currentIndex
+                    ? "bg-primary-500 w-5"
+                    : "bg-slate-300 dark:bg-slate-600 hover:bg-slate-400"
+                }`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Image counter */}
+        <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-2">
+          {currentIndex + 1} / {images.length}
+        </p>
+      </motion.div>
+    </div>
+  );
+}
+
+// Documentation Button
+function DocumentationButton({ onClick, lang }) {
+  return (
+    <button
+      onClick={onClick}
+      className="
+        mt-4 inline-flex items-center gap-2
+        px-4 py-2 rounded-xl
+        bg-primary-500/10 hover:bg-primary-500/20
+        text-primary-600 dark:text-primary-400
+        text-sm font-medium
+        transition-colors
+      "
+    >
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      {lang === "id" ? "Lihat Dokumentasi" : "View Documentation"}
+    </button>
+  );
+}
+
 export default function Experience() {
   const { lang } = useLanguage();
   const [activeId, setActiveId] = useState(null);
+  const [modalData, setModalData] = useState({ isOpen: false, images: [], title: "" });
 
   const {ref, show} = useReveal();
 
   const experience = experienceData[lang];
 
+  const openModal = (images, title) => {
+    setModalData({ isOpen: true, images, title });
+  };
+
+  const closeModal = () => {
+    setModalData({ isOpen: false, images: [], title: "" });
+  };
+
   return (
+    <>
     <section
       ref={ref}
       id="experience"
@@ -122,6 +248,14 @@ export default function Experience() {
                       transition={{ duration: 0.35 }}
                       className="overflow-hidden"
                     >
+                      {/* DOCUMENTATION BUTTON */}
+                      {exp.images && exp.images.length > 0 && (
+                        <DocumentationButton 
+                          onClick={() => openModal(exp.images, exp.role)} 
+                          lang={lang} 
+                        />
+                      )}
+
                       <ul className="mt-6 space-y-3">
                         {exp.responsibilities.map((item, i) => (
                           <li
@@ -153,5 +287,15 @@ export default function Experience() {
         </div>
       </motion.div>
     </section>
+
+      {/* Documentation Modal */}
+      <DocumentationModal
+        images={modalData.images}
+        title={modalData.title}
+        isOpen={modalData.isOpen}
+        onClose={closeModal}
+        lang={lang}
+      />
+    </>
   );
 }

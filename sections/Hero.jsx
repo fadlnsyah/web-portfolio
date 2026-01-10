@@ -139,7 +139,7 @@ export default function Hero() {
               shadow-2xl
             ">
               <Image
-                src="/images/profile-removebg-preview.png"
+                src="/images/profile/profile.png"
                 alt="Fadlan"
                 width={300}
                 height={300}
@@ -152,7 +152,7 @@ export default function Hero() {
             <div className="absolute bottom-4 right-4 flex items-center gap-2 bg-white dark:bg-slate-900 px-4 py-2 rounded-full shadow-md">
               <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
               <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
-                Available for work
+                {lang === "id" ? "Tersedia untuk kerja" : "Available for work"}
               </span>
             </div>
           </div>

@@ -7,6 +7,10 @@ const experience = {
       period: "Feb 2024 – Jun 2024",
       type: "Software Engineering",
       tech: ["Flutter", "Laravel", "PHP", "Java", "Spring Boot", "MySQL"],
+      images: [
+        "/images/experience/sei/mobile.png",
+        "/images/experience/sei/website.png",
+      ],
       responsibilities: [
         "Mengembangkan aplikasi mobile absensi dan pengajuan cuti menggunakan Flutter",
         "Membangun aplikasi web admin untuk proses persetujuan dan manajemen",
@@ -22,6 +26,7 @@ const experience = {
       period: "Okt 2025 – Nov 2025",
       type: "Data & Analytics",
       tech: ["Python", "Web Scraping", "BigQuery", "Google Sheets"],
+      images: [],
       responsibilities: [
         "Melakukan scraping data dari beberapa website bioskop (XXI, CGV, Cinepolis)",
         "Membangun pipeline data untuk transformasi, validasi, dan sinkronisasi",
@@ -39,6 +44,10 @@ const experience = {
       period: "Feb 2024 – Jun 2024",
       type: "Software Engineering",
       tech: ["Flutter", "Laravel", "PHP", "Java", "Spring Boot", "MySQL"],
+      images: [
+        "/images/experience/sei/mobile.png",
+        "/images/experience/sei/website.png",
+      ],
       responsibilities: [
         "Developed a mobile attendance and leave management application using Flutter",
         "Built an admin web application for approval and management workflows",
@@ -54,6 +63,7 @@ const experience = {
       period: "Oct 2025 – Nov 2025",
       type: "Data & Analytics",
       tech: ["Python", "Web Scraping", "BigQuery", "Google Sheets"],
+      images: [],
       responsibilities: [
         "Scraped data from multiple cinema websites (XXI, CGV, Cinepolis)",
         "Built data pipelines for transformation, validation, and synchronization",

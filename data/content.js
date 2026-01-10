@@ -53,7 +53,7 @@ const content = {
       greeting: "Hi, I'm",
       name: "Fadlan",
       role: "Software Engineer",
-      subtitle: "Building modern web applications with a focus on clean UI, optimal performance, and exceptional user experience.",
+      subtitle: "Software Engineer with experience in web and backend development, as well as data processing and machine learning. Focused on building scalable, reliable, and production-ready systems with clean and maintainable architecture.",
       cta: {
         projects: "View Projects",
         contact: "Contact Me",
@@ -61,7 +61,7 @@ const content = {
     },
     about: {
       title: "About Me",
-      description: "Software Engineer with experience in web and backend development, as well as data processing and machine learning. Focused on building scalable, reliable, and production-ready systems with clean and maintainable architecture.",
+      description: "I am a passionate Software Engineer dedicated to building impactful digital products. With experience in both frontend and backend development, I focus on creating solutions that not only work well but also deliver a delightful user experience.",
       approach: {
         title: "My Approach",
         items: [
