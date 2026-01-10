@@ -24,7 +24,7 @@ const projects = {
       images: ["/images/projects/porto/porto.png"],
       github: "https://github.com/fadlnsyah/web-porto",
       youtube: null,
-      website: "https://fadlan.dev",
+      website: "https://fadlan-portofolio-dev.vercel.app/",
     },
 
     {
@@ -38,7 +38,7 @@ const projects = {
         "/images/projects/elearn-sd261/sd2.png",
         "/images/projects/elearn-sd261/sd3.png",
       ],
-      github: null,
+      github: "https://github.com/fadlnsyah/elearn-sd261",
       youtube: null,
       website: null,
     },
@@ -86,7 +86,7 @@ const projects = {
       images: ["/images/projects/porto/porto.png"],
       github: "https://github.com/fadlnsyah/web-porto",
       youtube: null,
-      website: "https://fadlan.dev",
+      website: "https://fadlan-portofolio-dev.vercel.app/",
     },
 
     {
@@ -100,7 +100,7 @@ const projects = {
         "/images/projects/elearn-sd261/sd2.png",
         "/images/projects/elearn-sd261/sd3.png",
       ],
-      github: null,
+      github: "https://github.com/fadlnsyah/elearn-sd261",
       youtube: null,
       website: null,
     },
