@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 import Image from "next/image";
 
 function GitHubIcon() {
@@ -57,9 +57,18 @@ function JournalIcon() {
 }
 
 export default function ProjectCard({ title, description, tech, github, kaggle, journal, youtube, website, images }) {
-  // Support both single image (string) and multiple images (array)
   const imageList = images ? (Array.isArray(images) ? images : [images]) : [];
   const [currentIndex, setCurrentIndex] = React.useState(0);
+
+  // Spotlight Effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
 
   // Auto-slide every 3 seconds
   React.useEffect(() => {
@@ -67,7 +76,7 @@ export default function ProjectCard({ title, description, tech, github, kaggle, 
     
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % imageList.length);
-    }, 3000);
+    }, 3500); // Slightly slower for better viewing
 
     return () => clearInterval(interval);
   }, [imageList.length]);
@@ -75,46 +84,75 @@ export default function ProjectCard({ title, description, tech, github, kaggle, 
   return (
     <motion.div
       className="
-        group h-full
-        bg-white dark:bg-slate-800
-        border border-slate-200 dark:border-slate-700
-        rounded-3xl p-8
-        shadow-sm hover:shadow-xl
-        transition-all duration-300
+        group relative h-full
+        bg-white dark:bg-slate-900/50
+        border border-slate-200 dark:border-slate-800
+        rounded-3xl p-6 sm:p-8
+        shadow-sm hover:shadow-2xl
+        transition-all duration-500
+        overflow-hidden
       "
-      whileHover={{ y: -4 }}
+      onMouseMove={handleMouseMove}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -8 }}
     >
+      {/* SPOTLIGHT GRADIENT */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              650px circle at ${mouseX}px ${mouseY}px,
+              rgba(14, 165, 233, 0.1),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+
       {/* IMAGE CAROUSEL */}
       {imageList.length > 0 && (
-        <div className="relative w-full h-48 mb-6 rounded-2xl overflow-hidden">
+        <div className="relative w-full h-52 mb-6 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800/50">
           {imageList.map((img, idx) => (
-            <div
+            <motion.div
               key={idx}
-              className={`absolute inset-0 transition-opacity duration-500 ${
-                idx === currentIndex ? "opacity-100" : "opacity-0"
-              }`}
+              initial={false}
+              animate={{ 
+                opacity: idx === currentIndex ? 1 : 0,
+                scale: idx === currentIndex ? 1 : 1.05
+              }}
+              transition={{ duration: 0.7 }}
+              className="absolute inset-0"
             >
               <Image
                 src={img}
                 alt={`${title} - ${idx + 1}`}
                 fill
-                className="object-contain"
+                className="object-contain p-2"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority={idx === 0} // Only prioritize first image
               />
-            </div>
+            </motion.div>
           ))}
           
           {/* Dots indicator */}
           {imageList.length > 1 && (
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
               {imageList.map((_, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setCurrentIndex(idx)}
-                  className={`w-2 h-2 rounded-full transition-all ${
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentIndex(idx);
+                  }}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
                     idx === currentIndex
-                      ? "bg-primary-500 w-4"
-                      : "bg-slate-400/50 hover:bg-slate-400"
+                      ? "bg-primary-500 w-6"
+                      : "bg-slate-300/80 dark:bg-slate-600/80 w-1.5 hover:bg-primary-400"
                   }`}
+                  aria-label={`Go to slide ${idx + 1}`}
                 />
               ))}
             </div>
@@ -122,125 +160,117 @@ export default function ProjectCard({ title, description, tech, github, kaggle, 
         </div>
       )}
 
-      {/* TITLE */}
-      <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4 line-clamp-2">
-        {title}
-      </h3>
+      {/* CONTENT */}
+      <div className="relative z-10 flex flex-col h-[calc(100%-14rem)]">
+        {/* TITLE */}
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-primary-500 transition-colors">
+          {title}
+        </h3>
 
-      {/* DESCRIPTION */}
-      <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 line-clamp-4">
-        {description}
-      </p>
+        {/* DESCRIPTION - Increased contrast (slate-500 -> 600 dark:300 -> 200) */}
+        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 line-clamp-3">
+          {description}
+        </p>
 
-      {/* TECH STACK */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {tech.map((t) => (
-          <span
-            key={t}
-            className="
-              px-3 py-1 text-xs font-medium
-              rounded-full
-              bg-slate-100 dark:bg-slate-700
-              text-slate-600 dark:text-slate-300
-            "
-          >
-            {t}
-          </span>
-        ))}
-      </div>
+        {/* TECH STACK */}
+        <div className="flex flex-wrap gap-2 mb-6 mt-auto">
+          {tech.map((t) => (
+            <span
+              key={t}
+              className="
+                px-3 py-1 text-[11px] font-semibold track-wide uppercase
+                rounded-full
+                bg-slate-100 dark:bg-slate-800
+                text-slate-600 dark:text-slate-300
+                border border-slate-200 dark:border-slate-700
+                group-hover:border-primary-200 dark:group-hover:border-primary-800
+                transition-colors
+              "
+            >
+              {t}
+            </span>
+          ))}
+        </div>
 
-      {/* LINKS */}
-      <div className="flex gap-4 mt-auto">
-        {github && (
-          <a
-            href={github}
-            target="_blank"
-            rel="noreferrer"
-            className="
-              flex items-center gap-2
-              text-sm font-medium
-              text-slate-600 dark:text-slate-400
-              hover:text-primary-600 dark:hover:text-primary-400
-              transition-colors
-            "
-          >
-            <GitHubIcon />
-            Code
-          </a>
-        )}
+        {/* LINKS */}
+        <div className="flex gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+          {github && (
+            <a
+              href={github}
+              target="_blank"
+              rel="noreferrer"
+              className="group/link flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+            >
+              <GitHubIcon />
+              <span className="relative">
+                Code
+                <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary-500 scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left" />
+              </span>
+            </a>
+          )}
 
-        {kaggle && (
-          <a
-            href={kaggle}
-            target="_blank"
-            rel="noreferrer"
-            className="
-              flex items-center gap-2
-              text-sm font-medium
-              text-slate-600 dark:text-slate-400
-              hover:text-cyan-500
-              transition-colors
-            "
-          >
-            <KaggleIcon />
-            Kaggle
-          </a>
-        )}
+          {kaggle && (
+            <a
+              href={kaggle}
+              target="_blank"
+              rel="noreferrer"
+              className="group/link flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-cyan-500 transition-colors"
+            >
+              <KaggleIcon />
+              <span className="relative">
+                Kaggle
+                <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-cyan-500 scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left" />
+              </span>
+            </a>
+          )}
 
-        {journal && (
-          <a
-            href={journal}
-            target="_blank"
-            rel="noreferrer"
-            className="
-              flex items-center gap-2
-              text-sm font-medium
-              text-slate-600 dark:text-slate-400
-              hover:text-emerald-500
-              transition-colors
-            "
-          >
-            <JournalIcon />
-            Journal
-          </a>
-        )}
+          {journal && (
+            <a
+              href={journal}
+              target="_blank"
+              rel="noreferrer"
+              className="group/link flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition-colors"
+            >
+              <JournalIcon />
+              <span className="relative">
+                Journal
+                <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-emerald-500 scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left" />
+              </span>
+            </a>
+          )}
 
-        {youtube && (
-          <a
-            href={youtube}
-            target="_blank"
-            rel="noreferrer"
-            className="
-              flex items-center gap-2
-              text-sm font-medium
-              text-slate-600 dark:text-slate-400
-              hover:text-red-500
-              transition-colors
-            "
-          >
-            <YouTubeIcon />
-            Demo
-          </a>
-        )}
+          {youtube && (
+            <a
+              href={youtube}
+              target="_blank"
+              rel="noreferrer"
+              className="group/link flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-red-500 transition-colors"
+            >
+              <YouTubeIcon />
+              <span className="relative">
+                Demo
+                <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-red-500 scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left" />
+              </span>
+            </a>
+          )}
 
-        {website && (
-          <a
-            href={website}
-            target="_blank"
-            rel="noreferrer"
-            className="
-              flex items-center gap-2
-              text-sm font-medium
-              text-slate-600 dark:text-slate-400
-              hover:text-primary-600 dark:hover:text-primary-400
-              transition-colors
-            "
-          >
-            <ExternalLinkIcon />
-            Visit
-          </a>
-        )}
+          {website && (
+            <a
+              href={website}
+              target="_blank"
+              rel="noreferrer"
+              className="group/link flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+            >
+              <ExternalLinkIcon />
+              <span className="relative">
+                Visit
+                <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary-500 scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left" />
+              </span>
+            </a>
+          )}
+        </div>
       </div>
     </motion.div>
   );
 }
+

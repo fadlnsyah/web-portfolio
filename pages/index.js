@@ -1,4 +1,5 @@
 import Navbar from "@components/Navbar";
+import Seo from "@components/Seo";
 
 import Hero from "@sections/Hero";
 import About from "@sections/About";
@@ -9,6 +10,7 @@ import Experience from "@sections/Experience";
 export default function Home() {
   return (
     <>
+      <Seo />
       <Navbar />
       <main>
         <Hero />

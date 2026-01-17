@@ -1,7 +1,8 @@
 import content from "@/data/content";
 import { useLanguage } from "@/context/LanguageContext";
 import useReveal from "@/hooks/useReveal";
-import { motion } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
+import { useState } from "react";
 
 // Social link icons
 function InstagramIcon() {
@@ -23,7 +24,7 @@ function WhatsAppIcon() {
 function LinkedInIcon() {
   return (
     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.24 2.37 4.24 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
     </svg>
   );
 }
@@ -69,108 +70,120 @@ function EmailIcon() {
   );
 }
 
-// Social links data
+// Social Card Component
+function SocialCard({ social, index }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <motion.a
+      href={social.href}
+      target="_blank"
+      rel="noreferrer"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{
+        duration: 0.5,
+        delay: 0.1 + index * 0.05,
+        ease: "easeOut",
+      }}
+      className={`
+        group relative
+        flex flex-col items-center justify-center
+        h-32 mb-2
+        bg-white dark:bg-slate-900/50
+        border border-slate-200 dark:border-slate-800
+        rounded-3xl
+        shadow-sm hover:shadow-2xl
+        transition-all duration-300
+        overflow-hidden
+        ${social.color}
+      `}
+      whileHover={{ y: -6, scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onMouseMove={handleMouseMove}
+    >
+      {/* Background Spotlight */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              250px circle at ${mouseX}px ${mouseY}px,
+              rgba(255, 255, 255, 0.15),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      
+      <div className="relative z-10 text-slate-700 dark:text-slate-200 group-hover:text-current transition-colors">
+        <social.icon />
+      </div>
+      <span className="relative z-10 mt-3 text-sm font-semibold text-slate-600 dark:text-slate-400 group-hover:text-current">
+        {social.name}
+      </span>
+    </motion.a>
+  );
+}
+
 const socialLinks = [
   {
     name: "Instagram",
     icon: InstagramIcon,
     href: "https://instagram.com/fadlnsyah_",
-    color: `
-      hover:text-white
-      hover:bg-gradient-to-br
-      hover:from-purple-600
-      hover:via-pink-500
-      hover:to-orange-400
-    `,
-    hoverBg: `
-      group-hover:bg-gradient-to-br
-      group-hover:from-purple-600/10
-      group-hover:via-pink-500/10
-      group-hover:to-orange-400/10
-    `,
+    color: `hover:text-white hover:bg-gradient-to-br hover:from-purple-600 hover:via-pink-500 hover:to-orange-400`,
   },
   {
-  name: "WhatsApp",
+    name: "WhatsApp",
     icon: WhatsAppIcon,
     href: "https://wa.me/6281356285450",
-    color: `
-      hover:text-white
-      hover:bg-[#25D366]
-      dark:hover:bg-[#25D366]
-    `,
-    hoverBg: `
-      group-hover:bg-[#25D366]/10
-      dark:group-hover:bg-[#25D366]/25
-    `,
+    color: `hover:text-white hover:bg-[#25D366] dark:hover:bg-[#25D366]`,
   },
   {
     name: "LinkedIn",
     icon: LinkedInIcon,
     href: "https://www.linkedin.com/in/muhammadfadlansyah",
-    color: `
-      hover:text-white
-      hover:bg-[#0A66C2]
-      dark:hover:bg-[#0A66C2]
-    `,
-    hoverBg: `
-      group-hover:bg-[#0A66C2]/10
-      dark:group-hover:bg-[#0A66C2]/25
-    `,
+    color: `hover:text-white hover:bg-[#0A66C2] dark:hover:bg-[#0A66C2]`,
   },
-
-
   {
     name: "TikTok",
     icon: TikTokIcon,
     href: "https://www.tiktok.com/@fadlnsyah_",
-    color: `
-      hover:text-white
-      hover:bg-black
-      dark:hover:bg-white
-      dark:hover:text-black
-    `,
-    hoverBg: `
-      group-hover:bg-black/10
-      dark:group-hover:bg-white/10
-    `,
+    color: `hover:text-white hover:bg-black dark:hover:bg-white dark:hover:text-black`,
   },
   {
     name: "X",
     icon: XIcon,
     href: "https://x.com/fdlnsyah_",
-    color: `
-      hover:text-white
-      hover:bg-black
-      dark:hover:bg-white
-      dark:hover:text-black
-    `,
-    hoverBg: `
-      group-hover:bg-black/10
-      dark:group-hover:bg-white/10
-    `,
+    color: `hover:text-white hover:bg-black dark:hover:bg-white dark:hover:text-black`,
   },
   {
     name: "GitHub",
     icon: GitHubIcon,
     href: "https://github.com/fadlnsyah",
-    color: `
-      hover:text-white
-      hover:bg-[#181717]
-      dark:hover:bg-white
-      dark:hover:text-black
-    `,
-    hoverBg: `
-      group-hover:bg-[#181717]/10
-      dark:group-hover:bg-white/10
-    `,
+    color: `hover:text-white hover:bg-[#181717] dark:hover:bg-white dark:hover:text-black`,
   },
 ];
-
 
 export default function Contact() {
   const { lang } = useLanguage();
   const contact = content[lang].contact;
   const { ref, show } = useReveal();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText("fadlanzikri11@gmail.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <section
@@ -178,9 +191,9 @@ export default function Contact() {
       id="contact"
       className="
         relative
-        py-20 md:py-24
-        bg-gradient-to-b from-white to-slate-50
-        dark:from-slate-900 dark:to-slate-950
+        py-20 md:py-28
+        bg-slate-50
+        dark:bg-slate-950
       "
     >
       <motion.div
@@ -201,72 +214,78 @@ export default function Contact() {
         </div>
 
         {/* SOCIAL LINKS */}
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-6 mb-12 md:mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12 md:mb-16">
           {socialLinks.map((social, i) => (
-            <motion.a
-              key={social.name}
-              href={social.href}
-              target="_blank"
-              rel="noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={show ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.5,
-                delay: 0.15 + i * 0.08,
-                ease: "easeOut",
-              }}
-              className={`
-                group
-                flex flex-col items-center justify-center
-                h-28
-                bg-white dark:bg-slate-800
-                border border-slate-200 dark:border-slate-700
-                rounded-3xl
-                shadow-sm hover:shadow-xl
-                transition-all duration-300
-                ${social.color}
-              `}
-              whileHover={{ y: -6, scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <div className="text-slate-700 dark:text-slate-200 group-hover:text-current transition-colors">
-                <social.icon />
-              </div>
-              <span className="mt-3 text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-current">
-                {social.name}
-              </span>
-            </motion.a>
+            <SocialCard key={social.name} social={social} index={i} />
           ))}
         </div>
 
         {/* EMAIL CTA */}
-        <div className="mb-14 md:mb-16">
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             {contact.email}
           </p>
 
-          <motion.a
-            initial={{ opacity: 0, y: 20 }}
-            animate={show ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            href="mailto:fadlanzikri11@gmail.com"
-            className="
-              inline-flex items-center gap-3
-              px-8 py-4
-              rounded-2xl
-              font-semibold
-              text-white
-              bg-gradient-to-r from-primary-600 to-cyan-500
-              shadow-lg shadow-primary-500/25
-              hover:shadow-xl hover:shadow-primary-500/40
-              transition-all
-            "
-            whileHover={{ y: -3, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <EmailIcon />
-            fadlanzikri11@gmail.com
-          </motion.a>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <motion.a
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={show ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              href="mailto:fadlanzikri11@gmail.com"
+              className="
+                inline-flex items-center gap-3
+                px-8 py-4
+                rounded-2xl
+                font-bold
+                text-white
+                bg-gradient-to-r from-primary-600 to-cyan-500
+                shadow-lg shadow-primary-500/25
+                hover:shadow-xl hover:shadow-primary-500/40
+                transition-all
+              "
+              whileHover={{ y: -3, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <EmailIcon />
+              fadlanzikri11@gmail.com
+            </motion.a>
+
+            <motion.button
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={show ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.5, delay: 0.7 }}
+              onClick={handleCopy}
+              className="
+                inline-flex items-center gap-3
+                px-8 py-4
+                rounded-2xl
+                font-semibold
+                text-slate-700 dark:text-slate-200
+                bg-white dark:bg-slate-900
+                border border-slate-200 dark:border-slate-800
+                hover:bg-slate-50 dark:hover:bg-slate-800/80
+                transition-all
+              "
+              whileHover={{ y: -3, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {copied ? (
+                <>
+                  <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                  </svg>
+                  Copy
+                </>
+              )}
+            </motion.button>
+          </div>
         </div>
       </motion.div>
     </section>

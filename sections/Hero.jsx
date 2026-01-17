@@ -226,8 +226,8 @@ export default function Hero() {
                 px-8 py-4 rounded-2xl
                 font-semibold
                 text-slate-900 dark:text-white
-                bg-white dark:bg-slate-800
-                border border-slate-200 dark:border-slate-700
+                bg-white dark:bg-slate-900
+                border border-slate-200 dark:border-slate-800
                 hover:border-primary-400 dark:hover:border-primary-500
                 transition-all
               "
