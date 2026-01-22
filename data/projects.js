@@ -4,8 +4,8 @@ const projects = {
       id: 1,
       title: "Kopi Cerita",
       description:
-        "Aplikasi e-commerce coffee shop full-stack dengan fitur lengkap: menu interaktif, keranjang belanja, checkout, program loyalitas, dan dashboard admin untuk manajemen pesanan dan produk secara real-time.",
-      tech: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "NextAuth"],
+        "Dibangun dengan Next.js, Prisma, dan Neon PostgreSQL. Aplikasi e-commerce coffee shop full-stack dengan menu interaktif, keranjang belanja, checkout, program loyalitas, dan dashboard admin real-time.",
+      tech: ["Next.js", "TypeScript", "Prisma", "Neon", "NextAuth"],
       images: [
         "/images/projects/kopi-cerita/kopi-cerita1.png",
         "/images/projects/kopi-cerita/kopi-cerita2.png",
@@ -23,7 +23,7 @@ const projects = {
       id: 2,
       title: "E-Commerce Katalog",
       description:
-        "Website katalog produk modern dengan panel admin Filament. Dilengkapi manajemen produk yang efisien, UI toko yang elegan, dan sistem filtering pintar untuk pengalaman belanja yang seamless.",
+        "Dibangun dengan Laravel dan Filament. Website katalog produk modern dengan panel admin yang powerful, manajemen produk efisien, dan UI toko yang elegan.",
       tech: ["Laravel", "Filament", "PHP", "MySQL"],
       images: [
         "/images/projects/irwandhy/irwandhy.png",
@@ -38,7 +38,7 @@ const projects = {
       id: 3,
       title: "Portfolio Developer",
       description:
-        "Website portfolio interaktif dengan animasi smooth, dark/light mode, dan dukungan dwibahasa. Dibangun untuk memberikan first impression yang memorable bagi recruiter dan klien.",
+        "Dibangun dengan Next.js dan Framer Motion. Website portfolio interaktif dengan animasi smooth, dark/light mode, dan dukungan dwibahasa untuk impress recruiter dan klien.",
       tech: ["Next.js", "Tailwind CSS", "Framer Motion"],
       images: ["/images/projects/porto/porto.png"],
       github: "https://github.com/fadlnsyah/web-porto",
@@ -50,7 +50,7 @@ const projects = {
       id: 4,
       title: "Platform E-Learning",
       description:
-        "Platform pembelajaran digital untuk sekolah dasar dengan kuis interaktif, penilaian otomatis, dan dashboard analitik. Mendukung transformasi digital pendidikan dengan UX yang ramah anak.",
+        "Dibangun dengan Laravel. Platform pembelajaran digital untuk sekolah dasar dengan kuis interaktif, penilaian otomatis, dan dashboard analitik untuk guru dan siswa.",
       tech: ["Laravel", "PHP", "MySQL", "Bootstrap"],
       images: [
         "/images/projects/elearn-sd261/sd1.png",
@@ -86,8 +86,8 @@ const projects = {
       id: 1,
       title: "Kopi Cerita",
       description:
-        "Full-stack coffee shop e-commerce app with complete features: interactive menu, shopping cart, checkout, loyalty program, and admin dashboard for real-time order and product management.",
-      tech: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "NextAuth"],
+        "Built with Next.js, Prisma, and Neon PostgreSQL. Full-stack coffee shop e-commerce app featuring interactive menu, shopping cart, checkout, loyalty program, and real-time admin dashboard.",
+      tech: ["Next.js", "TypeScript", "Prisma", "Neon", "NextAuth"],
       images: [
         "/images/projects/kopi-cerita/kopi-cerita1.png",
         "/images/projects/kopi-cerita/kopi-cerita2.png",
@@ -105,7 +105,7 @@ const projects = {
       id: 2,
       title: "E-Commerce Catalog",
       description:
-        "Modern product catalog website with Filament admin panel. Features efficient product management, elegant storefront UI, and smart filtering for a seamless shopping experience.",
+        "Built with Laravel and Filament. Modern product catalog website with powerful admin panel, efficient product management, and elegant storefront UI.",
       tech: ["Laravel", "Filament", "PHP", "MySQL"],
       images: [
         "/images/projects/irwandhy/irwandhy.png",
@@ -120,7 +120,7 @@ const projects = {
       id: 3,
       title: "Developer Portfolio",
       description:
-        "Interactive portfolio website with smooth animations, dark/light mode, and bilingual support. Built to create a memorable first impression for recruiters and clients.",
+        "Built with Next.js and Framer Motion. Interactive portfolio website with smooth animations, dark/light mode, and bilingual support to impress recruiters and clients.",
       tech: ["Next.js", "Tailwind CSS", "Framer Motion"],
       images: ["/images/projects/porto/porto.png"],
       github: "https://github.com/fadlnsyah/web-porto",
@@ -132,7 +132,7 @@ const projects = {
       id: 4,
       title: "E-Learning Platform",
       description:
-        "Digital learning platform for elementary schools featuring interactive quizzes, auto-grading, and analytics dashboard. Built to support digital education transformation with child-friendly UX.",
+        "Built with Laravel. Digital learning platform for elementary schools featuring interactive quizzes, auto-grading, and analytics dashboard for teachers and students.",
       tech: ["Laravel", "PHP", "MySQL", "Bootstrap"],
       images: [
         "/images/projects/elearn-sd261/sd1.png",
