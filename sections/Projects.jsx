@@ -1,63 +1,25 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import projectsData from "@data/projects";
 import ProjectCard from "@components/ProjectCard";
+import ProjectModal from "@components/ProjectModal";
 import useReveal from "@/hooks/useReveal";
 import { useLanguage } from "@/context/LanguageContext";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Projects() {
   const { ref, show } = useReveal();
   const { lang } = useLanguage();
-  
   const projects = projectsData[lang];
+  
+  const [selectedProject, setSelectedProject] = useState(null);
 
-  const scrollRef = useRef(null);
-  const autoScrollRef = useRef(null);
-  const [autoScroll, setAutoScroll] = useState(true);
-
-  const scrollByAmount = 420;
-
-  // ===== MOUSE DRAG STATE (TAMBAHAN MINIMAL) =====
-  const isDown = useRef(false);
-  const startX = useRef(0);
-  const scrollLeftPos = useRef(0);
-
-  const onMouseDown = (e) => {
-    isDown.current = true;
-    startX.current = e.pageX - scrollRef.current.offsetLeft;
-    scrollLeftPos.current = scrollRef.current.scrollLeft;
-    setAutoScroll(false);
+  const handleOpenModal = (project) => {
+    setSelectedProject(project);
   };
 
-  const onMouseLeave = () => {
-    isDown.current = false;
+  const handleCloseModal = () => {
+    setSelectedProject(null);
   };
-
-  const onMouseUp = () => {
-    isDown.current = false;
-  };
-
-  const onMouseMove = (e) => {
-    if (!isDown.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX.current) * 1.5;
-    scrollRef.current.scrollLeft = scrollLeftPos.current - walk;
-  };
-
-  // ===== AUTO SCROLL (TETAP ADA, TIDAK DIUBAH) =====
-  useEffect(() => {
-    if (!autoScroll) return;
-
-    autoScrollRef.current = setInterval(() => {
-      scrollRef.current?.scrollBy({
-        left: scrollByAmount,
-        behavior: "smooth",
-      });
-    }, 3000);
-
-    return () => clearInterval(autoScrollRef.current);
-  }, [autoScroll]);
 
   return (
     <section
@@ -98,47 +60,37 @@ export default function Projects() {
           </div>
         </motion.div>
 
-        {/* ================= PROJECT SCROLLER ================= */}
-        <div
-          ref={scrollRef}
-          onMouseDown={onMouseDown}
-          onMouseLeave={onMouseLeave}
-          onMouseUp={onMouseUp}
-          onMouseMove={onMouseMove}
-          className="
-            overflow-x-auto
-            overflow-y-hidden
-            scrollbar-hide
-            cursor-grab active:cursor-grabbing
-            select-none
-          "
-        >
-          <div
-            className="
-              grid grid-flow-col
-              auto-cols-[85%]
-              sm:auto-cols-[60%]
-              md:auto-cols-[48%]
-              gap-8
-            "
-          >
-            {projects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 40 }}
-                animate={show ? { opacity: 1, y: 0 } : {}}
-                transition={{
-                  duration: 0.6,
-                  delay: 0.25 + index * 0.08,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              >
-                <ProjectCard {...project} />
-              </motion.div>
-            ))}
-          </div>
+        {/* ================= PROJECT GRID (3 COLUMNS) ================= */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={show ? { opacity: 1, y: 0 } : {}}
+              transition={{
+                duration: 0.5,
+                delay: 0.2 + index * 0.1,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <ProjectCard
+                title={project.title}
+                onClick={() => handleOpenModal(project)}
+              />
+            </motion.div>
+          ))}
         </div>
       </motion.div>
+
+      {/* ================= MODAL ================= */}
+      <AnimatePresence>
+        {selectedProject && (
+          <ProjectModal
+            project={selectedProject}
+            onClose={handleCloseModal}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
