@@ -130,16 +130,15 @@ const projects = {
 
     {
       id: 4,
-      title: "E-Learning Platform",
+      title: "Siakad Platform",
       description:
         "Built with Laravel. Digital learning platform for elementary schools featuring interactive quizzes, auto-grading, and analytics dashboard for teachers and students.",
       tech: ["Laravel", "PHP", "MySQL", "Bootstrap"],
       images: [
-        "/images/projects/elearn-sd261/sd1.png",
-        "/images/projects/elearn-sd261/sd2.png",
-        "/images/projects/elearn-sd261/sd3.png",
+        "/images/projects/siakad/elearn1.png",
+        "/images/projects/siakad/elearn2.png",
       ],
-      github: "https://github.com/fadlnsyah/elearn-sd261",
+      github: "https://github.com/fadlnsyah/siakad",
       youtube: null,
       website: null,
     },
