@@ -41,6 +41,9 @@ const photoVariant = {
 export default function Hero() {
   const { lang } = useLanguage();
   const hero = content[lang].hero;
+  const roles = (Array.isArray(hero.roles) && hero.roles.length > 1)
+    ? hero.roles
+    : ["Software Engineer", "Full Stack Developer"];
   const sectionRef = useRef(null);
 
   // Parallax scroll effect
@@ -173,7 +176,7 @@ export default function Hero() {
           </motion.h1>
 
           <motion.div variants={item} className="flex flex-wrap items-center gap-3 mb-6">
-            {(hero.roles || [hero.role]).map((r, idx) => (
+            {roles.map((r, idx) => (
               <span
                 key={idx}
                 className="px-4 py-2 rounded-full text-base md:text-lg font-semibold bg-primary-500/10 dark:bg-primary-500/15 border border-primary-500/30 text-primary-600 dark:text-primary-400 shadow-sm"
