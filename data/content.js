@@ -10,7 +10,7 @@ const content = {
     hero: {
       greeting: "Halo, saya",
       name: "Fadlan",
-      role: "Software Engineer",
+      role: "Software Engineer & Full Stack Developer",
       subtitle: "Software Engineer dengan pengalaman di pengembangan web dan backend, serta pemrosesan data dan machine learning. Berfokus pada pembangunan sistem yang scalable, andal, dan siap produksi dengan arsitektur yang bersih dan mudah dipelihara.",
       cta: {
         projects: "Lihat Proyek",
@@ -52,7 +52,7 @@ const content = {
     hero: {
       greeting: "Hi, I'm",
       name: "Fadlan",
-      role: "Software Engineer",
+      role: "Software Engineer & Full Stack Developer",
       subtitle: "Software Engineer with experience in web and backend development, as well as data processing and machine learning. Focused on building scalable, reliable, and production-ready systems with clean and maintainable architecture.",
       cta: {
         projects: "View Projects",
