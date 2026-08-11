@@ -172,12 +172,16 @@ export default function Hero() {
             </motion.span>
           </motion.h1>
 
-          <motion.p
-            variants={item}
-            className="text-2xl font-semibold text-primary-600 dark:text-primary-400 mb-6"
-          >
-            {hero.role}
-          </motion.p>
+          <motion.div variants={item} className="flex flex-wrap items-center gap-3 mb-6">
+            {(hero.roles || [hero.role]).map((r, idx) => (
+              <span
+                key={idx}
+                className="px-4 py-2 rounded-full text-base md:text-lg font-semibold bg-primary-500/10 dark:bg-primary-500/15 border border-primary-500/30 text-primary-600 dark:text-primary-400 shadow-sm"
+              >
+                {r}
+              </span>
+            ))}
+          </motion.div>
 
           <motion.p
             variants={item}
